@@ -53,30 +53,11 @@ Cell escape;
 // basic cell manipulation
 
 // returns true if the cells are at the same position in our maze
-Boolean equalCells(const Cell cell1, const Cell cell2){
-  Boolean equals = false;
-  if (cell1.row == cell2.row && cell1.column == cell2.column)
-    equals = true;
-  return equals;
-}
+Boolean equalCells(const Cell , const Cell);
 // returns a new cell object
-Cell makeCell(const int row, const int col){
-  Cell newCell;
-  newCell.row = row;
-  newCell.column = col;
-  return newCell;
-}
+Cell makeCell(const int, const int );
 // returns true if the cell is within our maze
-Boolean validCell(const Cell theCell)
-{
-  Boolean valid = false;
-  if (theCell.row >= 0 && theCell.row < mazeRows && 
-      theCell.column >= 0 && theCell.column < mazeCols)
-  {
-    valid = true;
-  }
-  return valid;
-}
+Boolean validCell(const Cell);
 
 // routines for managing our backtracking
 
@@ -118,7 +99,32 @@ int main( int argc, char *argv[] )
 //////////////////////////////////////////////
 // Cell routines
 //////////////////////////////////////////////
+Boolean equalCells(const Cell cell1, const Cell cell2){
+  Boolean equals = false;
+  if (cell1.row == cell2.row && cell1.column == cell2.column)
+    equals = true;
+  return equals;
+}
 
+// returns a new cell object
+Cell makeCell(const int row, const int col){
+  Cell newCell;
+  newCell.row = row;
+  newCell.column = col;
+  return newCell;
+}
+
+// returns true if the cell is within our maze
+Boolean validCell(const Cell theCell)
+{
+  Boolean valid = false;
+  if (theCell.row >= 0 && theCell.row < mazeRows && 
+      theCell.column >= 0 && theCell.column < mazeCols)
+  {
+    valid = true;
+  }
+  return valid;
+}
 
 //////////////////////////////////////////////
 // List routines
