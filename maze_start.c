@@ -129,9 +129,39 @@ Boolean validCell(const Cell theCell)
 //////////////////////////////////////////////
 // List routines
 //////////////////////////////////////////////
+void addCell(const Cell newCell){
+  CellNode node;
+  node.cell = newCell;
+  node.next = top;
+  *top = node;
+}
 
+Cell nextCell(){
+  Cell popped = top->cell;
+  top = top->next;
+  return popped;
+}
+
+Boolean noMoreCells(){
+  return top == NULL;
+}
 
 //////////////////////////////////////////////
 // Maze routines
 //////////////////////////////////////////////
 
+void printMaze();
+void loadMaze();
+
+// returns true if there's a solution to the maze
+Boolean solveMaze();
+
+
+//////////////////////////////////////////////
+// Design-by-Contract routines
+//////////////////////////////////////////////
+
+// our invariant checker
+void checkState(){
+  
+}
