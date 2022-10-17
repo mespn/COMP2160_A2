@@ -8,6 +8,7 @@
 //-------------------------------------------------------------------------------------
 
 #define MAX_DIMENSION 20
+#define MAX_STRING_SIZE MAX_DIMENSION*2
 
 // constant definitions for the different cell states
 const char WALL    = '1';
@@ -36,7 +37,7 @@ struct CELL_NODE
 // VARIABLES
 //-------------------------------------------------------------------------------------
 
-CellNode *top = NULL;
+CellNode *top;
 
 // a 2D array used to store the maze
 char maze[MAX_DIMENSION][MAX_DIMENSION];
@@ -172,18 +173,100 @@ void printMaze(){
     rowString[0] = '\0';
   }
   free(rowString);
+  printf("\n");
 }
 
 void loadMaze(){
-  mazeRows = fgetc(stdin);
-  mazeCols = fgetc(stdin);
+  char inputLine[MAX_STRING_SIZE];
+  fgets(inputLine, MAX_STRING_SIZE, stdin);
+  mazeRows = atoi(strtok(inputLine, " "));
+  mazeCols = atoi(strtok(inputLine, "\n"));
 
-  printf("Rows: %d Columns: %d", mazeRows, mazeCols);
+  for (int row = 0; row < mazeRows; row++)
+  {
+    fgets(inputLine, MAX_STRING_SIZE, stdin);
+    if (inputLine[strlen(inputLine)-1] == '\n'){
+      inputLine[strlen(inputLine)-1] = '\0';
+    }
+    for(int col = 0; col < mazeCols; col++)
+    {
+      assert(validCell(makeCell(row, col)));
+      maze[row][col] = inputLine[col*2];
+      if (maze[row][col] == MOUSE)
+      {
+        mouse.row = row;
+        mouse.column = col;
+      }
+      if (maze[row][col] == EXIT)
+      {
+        escape.row = row;
+        escape.column = col;
+      }
+    }
+  }
+
+  printMaze();
 }
 
 // returns true if there's a solution to the maze
 Boolean solveMaze(){
-  return true;
+  Boolean solution = true;
+  // currentCell = startCell;
+  Cell currentCell = mouse;
+  // while currentCell is not the goalCell
+  while (!equalCells(currentCell, escape) && solution)
+  {
+    //   mark currentCell as visited;
+    maze[currentCell.row][currentCell.column] = VISITED;
+    //   add to the list the unvisited open neighbours of currentCell;
+    // add lower neighbour
+    if (maze[currentCell.row+1][currentCell.column] != VISITED && 
+        maze[currentCell.row+1][currentCell.column] != WALL)
+    {
+      Cell newCell = makeCell(currentCell.row +1, currentCell.column);
+      assert(validCell(newCell));
+      addCell(newCell);
+    }
+    // add upper neighbour
+    if (maze[currentCell.row-1][currentCell.column] != VISITED && 
+        maze[currentCell.row-1][currentCell.column] != WALL)
+    {
+      Cell newCell = makeCell(currentCell.row-1, currentCell.column);
+      assert(validCell(newCell));
+      addCell(newCell);
+    }
+    // add right neighbour
+    if (maze[currentCell.row][currentCell.column+1] != VISITED && 
+        maze[currentCell.row][currentCell.column+1] != WALL)
+    {
+      Cell newCell = makeCell(currentCell.row, currentCell.column+1);
+      assert(validCell(newCell));
+      addCell(newCell);
+    }
+    // add left neighbour
+    if (maze[currentCell.row][currentCell.column-1] != VISITED && 
+        maze[currentCell.row][currentCell.column-1] != WALL)
+    {
+      Cell newCell = makeCell(currentCell.row, currentCell.column-1);
+      assert(validCell(newCell));
+      addCell(newCell);
+    }
+    printMaze();
+    //   if the list is empty
+    if (noMoreCells())
+    {
+      solution = false;
+    }
+    else{
+    //     get the next cell from the list and make it currentCell;
+      currentCell = nextCell();
+    }
+  }
+  // end while;
+
+  // the mouse can escape the maze: we reached the goal cell
+
+  return solution;
 }
 
 
