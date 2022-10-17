@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 
 //-------------------------------------------------------------------------------------
@@ -130,15 +131,19 @@ Boolean validCell(const Cell theCell)
 // List routines
 //////////////////////////////////////////////
 void addCell(const Cell newCell){
-  CellNode node;
-  node.cell = newCell;
-  node.next = top;
-  *top = node;
+  CellNode *node;
+  node = malloc(sizeof(CellNode));
+  node->cell = newCell;
+  node->next = top;
+  top = node;
 }
 
 Cell nextCell(){
   Cell popped = top->cell;
+  Cell *tempCellPtr = top;
   top = top->next;
+  assert(tempCellPtr != NULL);
+  free(tempCellPtr);
   return popped;
 }
 
@@ -150,11 +155,36 @@ Boolean noMoreCells(){
 // Maze routines
 //////////////////////////////////////////////
 
-void printMaze();
-void loadMaze();
+void printMaze(){
+  char *rowString;
+  rowString = malloc(sizeof(char)* mazeCols);
+  rowString[0] = '\0';
+  for (int i = 0; i < mazeRows; i++)
+  {
+    for (int j = 0; j < mazeCols; j++)
+    {
+      int index = strlen(rowString);
+      rowString[index] = maze[i][j];
+      rowString[index + 1] = ' ';
+      rowString[index + 2] = '\0';
+    }
+    printf("%s\n", rowString);
+    rowString[0] = '\0';
+  }
+  free(rowString);
+}
+
+void loadMaze(){
+  mazeRows = fgetc(stdin);
+  mazeCols = fgetc(stdin);
+
+  printf("Rows: %d Columns: %d", mazeRows, mazeCols);
+}
 
 // returns true if there's a solution to the maze
-Boolean solveMaze();
+Boolean solveMaze(){
+  return true;
+}
 
 
 //////////////////////////////////////////////
