@@ -140,7 +140,7 @@ void addCell(const Cell newCell){
 
 Cell nextCell(){
   Cell popped = top->cell;
-  Cell *tempCellPtr = top;
+  CellNode *tempCellPtr = top;
   top = top->next;
   assert(tempCellPtr != NULL);
   free(tempCellPtr);
