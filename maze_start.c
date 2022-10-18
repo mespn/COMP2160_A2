@@ -85,15 +85,15 @@ void checkState();
 
 int main( int argc, char *argv[] )
 {
-    loadMaze();
+  loadMaze();
 
-    if ( solveMaze() )
-      printf( "The mouse is free!!!!\n" );
-    else
-      printf( "The mouse is trapped!!!!\n" );
-    
-    printf( "\nEnd of processing\n" );
-    
+  if ( solveMaze() )
+    printf( "The mouse is free!!!!\n" );
+  else
+    printf( "The mouse is trapped!!!!\n" );
+  
+  printf( "\nEnd of processing\n" );
+
   return EXIT_SUCCESS;
 }
 
@@ -108,7 +108,7 @@ Boolean equalCells(const Cell cell1, const Cell cell2){
   return equals;
 }
 
-// returns a new cell object
+// creates a new cell
 Cell makeCell(const int row, const int col){
   Cell newCell;
   newCell.row = row;
@@ -132,8 +132,10 @@ Boolean validCell(const Cell theCell)
 // List routines
 //////////////////////////////////////////////
 void addCell(const Cell newCell){
+  assert(validCell(newCell));
   CellNode *node;
   node = malloc(sizeof(CellNode));
+  assert(node != NULL);
   node->cell = newCell;
   node->next = top;
   top = node;
@@ -159,6 +161,7 @@ Boolean noMoreCells(){
 void printMaze(){
   char *rowString;
   rowString = malloc(sizeof(char)* mazeCols);
+  assert(rowString != NULL);
   rowString[0] = '\0';
   for (int i = 0; i < mazeRows; i++)
   {
@@ -204,15 +207,21 @@ void loadMaze(){
       }
     }
   }
-
+  checkState();
   printMaze();
+  checkState();
 }
 
 // returns true if there's a solution to the maze
 Boolean solveMaze(){
   Boolean solution = true;
+  // initialize list
+  top = malloc(sizeof(CellNode));
+  checkState();
+
   // currentCell = startCell;
   Cell currentCell = mouse;
+
   // while currentCell is not the goalCell
   while (!equalCells(currentCell, escape) && solution)
   {
@@ -224,7 +233,6 @@ Boolean solveMaze(){
         maze[currentCell.row+1][currentCell.column] != WALL)
     {
       Cell newCell = makeCell(currentCell.row +1, currentCell.column);
-      assert(validCell(newCell));
       addCell(newCell);
     }
     // add upper neighbour
@@ -265,10 +273,19 @@ Boolean solveMaze(){
   // end while;
 
   // the mouse can escape the maze: we reached the goal cell
-
+  maze[currentCell.row][currentCell.column] = MOUSE;
+  printMaze();
+  destroyList();
   return solution;
 }
 
+void destroyList(){
+  while (NULL != top){
+    CellNode *tempCellPtr = top;
+    top = top->next;
+    free(tempCellPtr);
+  }
+}
 
 //////////////////////////////////////////////
 // Design-by-Contract routines
@@ -276,5 +293,14 @@ Boolean solveMaze(){
 
 // our invariant checker
 void checkState(){
-  
+  assert(validCell(mouse));
+  assert(validCell(escape));
+  for (int i = 0; i <mazeRows; i++)
+  {
+    for (int j = 0; j < mazeCols; j++)
+    {
+      assert(maze[i][j] != NULL);
+    }
+  }
+  assert(top != NULL);
 }
