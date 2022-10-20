@@ -34,7 +34,6 @@ This code uses a backtracking algorithm to find a path through a maze. In order 
 
 Every maze should be given in the following format:
 
-
     [# rows] [# columns]
 
     1 1 1 1 1 1 1 ... 1
@@ -55,5 +54,4 @@ correct number of rows in the maze
 `# columns` with integer value corresponding to the
 correct number of columns in the maze
 
-`'_' characters` with `'1'` (walls), `'0'` (paths), and exactly one `'m'` and one `'e'` characters 
-which will represent the mouse and exit respectively.
+`'_' characters` with `'1'` (walls), `'0'` (paths), and exactly one `'m'` and one `'e'` characters which will represent the mouse and exit respectively.
