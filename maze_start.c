@@ -72,6 +72,7 @@ void addCell(const Cell cell);
 
 void printMaze();
 void loadMaze();
+void destroyList();
 
 // returns true if there's a solution to the maze
 Boolean solveMaze();
@@ -133,20 +134,24 @@ Boolean validCell(const Cell theCell)
 //////////////////////////////////////////////
 void addCell(const Cell newCell){
   assert(validCell(newCell));
+  checkState();
   CellNode *node;
   node = malloc(sizeof(CellNode));
   assert(node != NULL);
   node->cell = newCell;
   node->next = top;
   top = node;
+  checkState();
 }
 
 Cell nextCell(){
+  checkState();
   Cell popped = top->cell;
   CellNode *tempCellPtr = top;
   top = top->next;
   assert(tempCellPtr != NULL);
   free(tempCellPtr);
+  checkState();
   return popped;
 }
 
@@ -176,6 +181,7 @@ void printMaze(){
     rowString[0] = '\0';
   }
   free(rowString);
+  checkState();
   printf("\n");
 }
 
@@ -207,7 +213,7 @@ void loadMaze(){
       }
     }
   }
-  checkState();
+  // checkState();
   printMaze();
   checkState();
 }
@@ -243,19 +249,19 @@ Boolean solveMaze(){
       assert(validCell(newCell));
       addCell(newCell);
     }
-    // add right neighbour
-    if (maze[currentCell.row][currentCell.column+1] != VISITED && 
-        maze[currentCell.row][currentCell.column+1] != WALL)
-    {
-      Cell newCell = makeCell(currentCell.row, currentCell.column+1);
-      assert(validCell(newCell));
-      addCell(newCell);
-    }
     // add left neighbour
     if (maze[currentCell.row][currentCell.column-1] != VISITED && 
         maze[currentCell.row][currentCell.column-1] != WALL)
     {
       Cell newCell = makeCell(currentCell.row, currentCell.column-1);
+      assert(validCell(newCell));
+      addCell(newCell);
+    }
+    // add right neighbour
+    if (maze[currentCell.row][currentCell.column+1] != VISITED && 
+        maze[currentCell.row][currentCell.column+1] != WALL)
+    {
+      Cell newCell = makeCell(currentCell.row, currentCell.column+1);
       assert(validCell(newCell));
       addCell(newCell);
     }
@@ -295,12 +301,6 @@ void destroyList(){
 void checkState(){
   assert(validCell(mouse));
   assert(validCell(escape));
-  for (int i = 0; i <mazeRows; i++)
-  {
-    for (int j = 0; j < mazeCols; j++)
-    {
-      assert(maze[i][j] != NULL);
-    }
-  }
-  assert(top != NULL);
+  
+  // assert(top != NULL);
 }
