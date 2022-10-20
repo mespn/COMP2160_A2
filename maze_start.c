@@ -1,3 +1,19 @@
+//-----------------------------------------
+// NAME: Manuel Espinoza 
+// STUDENT NUMBER: 7946366
+// COURSE: COMP 2160, SECTION: A02
+// INSTRUCTOR: Rasit Eskicioglu
+// ASSIGNMENT: Assignment #2
+// 
+// REMARKS: This code uses a backtracking
+//          algorithm to find a path through a
+//          maze. In order to accomplish this,
+//          a linked-list-based stack has been 
+//          implemented to keep track of the 
+//          possible paths
+//
+//-----------------------------------------
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
